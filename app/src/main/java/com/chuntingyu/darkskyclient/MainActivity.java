@@ -3,9 +3,20 @@ package com.chuntingyu.darkskyclient;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.chuntingyu.darkskyclient.events.ErrorEvent;
+import com.chuntingyu.darkskyclient.events.WeatherEvent;
 import com.chuntingyu.darkskyclient.services.WeatherService;
+import com.chuntingyu.darkskyclient.services.WeatherServiceProvider;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import models.Currently;
 import models.Weather;
 import retrofit2.Call;
@@ -18,34 +29,50 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    @BindView(R.id.tempTextView)
+
+    TextView tempTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.darksky.net/forecast/7f21b16d01ea1f181a0774a474dc6236/37.8267,-122.4233/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        requestCurrentWeather(37.8267,-122.4233);
 
-        WeatherService weatherService = retrofit.create(WeatherService.class);
-        Call<Weather> weatherData = weatherService.getWeather();
-        weatherData.enqueue(new Callback<Weather>() {
-            @Override
-            public void onResponse(Call<Weather> call, Response<Weather> response) {
+//        tempTextView = (TextView) findViewById(R.id.tempTextView);
+        ButterKnife.bind(this);
+    }
 
-                Currently currently = response.body().getCurrently();
-                Log.e(TAG, "Temperature = " + currently.getTemperature());
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
-            }
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 
-            @Override
-            public void onFailure(Call<Weather> call, Throwable t) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWeatherEvent(WeatherEvent weatherEvent) {
 
-                Log.e(TAG, "onFailure, unable to get weather data");
+        Currently currently = weatherEvent.getWeather().getCurrently();
+        tempTextView.setText(String.valueOf(Math.round(currently.getTemperature())));
 
-            }
-        });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onErrorEvent(ErrorEvent errorEvent){
+        Toast.makeText(this,"Unable to connect weather server", Toast.LENGTH_SHORT).show();
+    }
+
+    private void requestCurrentWeather(double lat, double lon) {
+
+        WeatherServiceProvider weatherServiceProvider = new WeatherServiceProvider();
+        weatherServiceProvider.getWeather(lat, lon);
 
     }
 }
