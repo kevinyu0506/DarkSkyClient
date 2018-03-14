@@ -1,8 +1,7 @@
-package com.chuntingyu.darkskyclient;
+package com.chuntingyu.darkskyclient.views;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chuntingyu.darkskyclient.MvpApp;
+import com.chuntingyu.darkskyclient.R;
 import com.chuntingyu.darkskyclient.events.ErrorEvent;
 import com.chuntingyu.darkskyclient.events.WeatherEvent;
 import com.chuntingyu.darkskyclient.services.WeatherServiceProvider;
@@ -23,11 +24,9 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import models.Currently;
-import models.DataManager;
-import presenters.MainPresenter;
-import views.BaseActivity;
-import views.MainMvpView;
+import com.chuntingyu.darkskyclient.models.Currently;
+import com.chuntingyu.darkskyclient.models.DataManager;
+import com.chuntingyu.darkskyclient.presenters.MainPresenter;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 

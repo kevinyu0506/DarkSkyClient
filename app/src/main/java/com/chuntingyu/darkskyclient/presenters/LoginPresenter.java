@@ -1,7 +1,7 @@
-package presenters;
+package com.chuntingyu.darkskyclient.presenters;
 
-import models.DataManager;
-import views.LoginMvpView;
+import com.chuntingyu.darkskyclient.models.DataManager;
+import com.chuntingyu.darkskyclient.views.LoginMvpView;
 
 /**
  * Created by Kevin on 2018/3/14.

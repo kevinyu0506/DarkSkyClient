@@ -1,4 +1,4 @@
-package com.chuntingyu.darkskyclient;
+package com.chuntingyu.darkskyclient.views;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import models.DataManager;
-import presenters.LoginPresenter;
-import views.BaseActivity;
-import views.LoginMvpView;
+import com.chuntingyu.darkskyclient.CommonUtils;
+import com.chuntingyu.darkskyclient.MvpApp;
+import com.chuntingyu.darkskyclient.R;
+import com.chuntingyu.darkskyclient.models.DataManager;
+import com.chuntingyu.darkskyclient.presenters.LoginPresenter;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
 

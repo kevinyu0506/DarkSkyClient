@@ -1,15 +1,14 @@
 package com.chuntingyu.darkskyclient.services;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.chuntingyu.darkskyclient.events.ErrorEvent;
 import com.chuntingyu.darkskyclient.events.WeatherEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
-import models.Currently;
-import models.Weather;
+import com.chuntingyu.darkskyclient.models.Currently;
+import com.chuntingyu.darkskyclient.models.Weather;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

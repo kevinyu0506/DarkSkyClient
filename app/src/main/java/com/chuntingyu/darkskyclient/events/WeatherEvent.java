@@ -1,6 +1,6 @@
 package com.chuntingyu.darkskyclient.events;
 
-import models.Weather;
+import com.chuntingyu.darkskyclient.models.Weather;
 
 /**
  * Created by Kevin on 2018/3/12.

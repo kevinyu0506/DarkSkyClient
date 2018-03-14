@@ -1,4 +1,4 @@
-package models;
+package com.chuntingyu.darkskyclient.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;

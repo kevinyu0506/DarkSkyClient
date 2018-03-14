@@ -2,8 +2,8 @@ package com.chuntingyu.darkskyclient;
 
 import android.app.Application;
 
-import models.DataManager;
-import models.SharedPrefsHelper;
+import com.chuntingyu.darkskyclient.models.DataManager;
+import com.chuntingyu.darkskyclient.models.SharedPrefsHelper;
 
 /**
  * Created by Kevin on 2018/3/14.

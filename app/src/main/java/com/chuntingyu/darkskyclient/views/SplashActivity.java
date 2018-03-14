@@ -1,14 +1,14 @@
-package com.chuntingyu.darkskyclient;
+package com.chuntingyu.darkskyclient.views;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 
-import models.DataManager;
-import presenters.SplashPresenter;
-import views.BaseActivity;
-import views.SplashMvpView;
+import com.chuntingyu.darkskyclient.MvpApp;
+import com.chuntingyu.darkskyclient.R;
+import com.chuntingyu.darkskyclient.models.DataManager;
+import com.chuntingyu.darkskyclient.presenters.SplashPresenter;
 
 public class SplashActivity extends BaseActivity implements SplashMvpView {
 

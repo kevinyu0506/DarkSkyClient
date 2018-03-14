@@ -1,6 +1,6 @@
 package com.chuntingyu.darkskyclient.services;
 
-import models.Weather;
+import com.chuntingyu.darkskyclient.models.Weather;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

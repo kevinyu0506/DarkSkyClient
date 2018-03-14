@@ -1,6 +1,6 @@
-package presenters;
+package com.chuntingyu.darkskyclient.presenters;
 
-import views.MvpView;
+import com.chuntingyu.darkskyclient.views.MvpView;
 
 /**
  * Created by Kevin on 2018/3/14.
