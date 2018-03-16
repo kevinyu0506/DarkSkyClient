@@ -13,14 +13,23 @@ import com.chuntingyu.darkskyclient.MvpApp;
 import com.chuntingyu.darkskyclient.R;
 import com.chuntingyu.darkskyclient.models.DataManager;
 import com.chuntingyu.darkskyclient.presenters.LoginPresenter;
+import com.gc.materialdesign.views.ButtonRectangle;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     LoginPresenter loginPresenter;
 
-    EditText editTextEmail, editTextPassword;
+    @BindView(R.id.editTextEmail)
+    EditText editTextEmail;
 
-    Button button;
+    @BindView(R.id.editTextPassword)
+    EditText editTextPassword;
+
+    @BindView(R.id.buttonLogin)
+    ButtonRectangle buttonLogin;
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -36,12 +45,10 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         loginPresenter = new LoginPresenter(dataManager);
 
         loginPresenter.onAttach(this);
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 
-        button = (Button) findViewById(R.id.button);
+        ButterKnife.bind(this);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onLoginButtonClick();

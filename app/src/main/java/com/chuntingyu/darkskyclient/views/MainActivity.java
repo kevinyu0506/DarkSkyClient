@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 import com.chuntingyu.darkskyclient.models.Currently;
 import com.chuntingyu.darkskyclient.models.DataManager;
 import com.chuntingyu.darkskyclient.presenters.MainPresenter;
+import com.gc.materialdesign.views.ButtonRectangle;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -41,8 +42,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.summaryTextView)
     TextView summaryTextView;
 
+    @BindView(R.id.textViewShow)
     TextView textViewShow;
-    Button buttonLogout;
+
+    @BindView(R.id.buttonLogout)
+    ButtonRectangle buttonLogout;
+
     MainPresenter mainPresenter;
 
     public static Intent getStartIntent(Context context) {
@@ -65,12 +70,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mainPresenter = new MainPresenter(dataManager);
         mainPresenter.onAttach(this);
 
-        textViewShow = (TextView) findViewById(R.id.textViewShow);
-
-        buttonLogout = (Button) findViewById(R.id.buttonLogout);
-
-        textViewShow.setText(mainPresenter.getEmailId());
-
+        textViewShow.setText("Welcome " + mainPresenter.getEmailId() + "!!!");
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
