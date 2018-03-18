@@ -1,8 +1,17 @@
 package com.chuntingyu.darkskyclient.views;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,7 +28,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -28,10 +40,15 @@ import com.chuntingyu.darkskyclient.models.Currently;
 import com.chuntingyu.darkskyclient.models.DataManager;
 import com.chuntingyu.darkskyclient.presenters.MainPresenter;
 import com.gc.materialdesign.views.ButtonRectangle;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
-public class MainActivity extends BaseActivity implements MainMvpView {
+public class MainActivity extends BaseActivity implements MainMvpView  {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int MY_PERMISSIONS_FINE_LOCATION = 0;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     @BindView(R.id.tempTextView)
     TextView tempTextView;
@@ -48,6 +65,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.buttonLogout)
     ButtonRectangle buttonLogout;
 
+    @BindView(R.id.userLocation)
+    TextView userLocation;
+
     MainPresenter mainPresenter;
 
     public static Intent getStartIntent(Context context) {
@@ -62,15 +82,28 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         requestCurrentWeather(37.8267,-122.4233);
 
-//        tempTextView = (TextView) findViewById(R.id.tempTextView);
         ButterKnife.bind(this);
+
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_FINE_LOCATION);
+
+        } else {
+            showUserLocation();
+        }
+
 
 
         DataManager dataManager = ((MvpApp) getApplication()).getDataManager();
         mainPresenter = new MainPresenter(dataManager);
         mainPresenter.onAttach(this);
 
-        textViewShow.setText("Welcome " + mainPresenter.getEmailId() + "!!!");
+        textViewShow.setText("Welcome " + mainPresenter.getEmailId() + "!");
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +112,32 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         });
 
+
+    }
+
+    private void showUserLocation() {
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+
+                            Geocoder gc = new Geocoder(getApplicationContext(), Locale.ENGLISH);
+                            try {
+                                Log.e(TAG, "Lat = " + location.getLatitude() + ", Lon = " + location.getLongitude());
+                                List<Address> lstAddress = gc.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                String returnAddress = lstAddress.get(0).getAdminArea().toUpperCase();
+                                userLocation.setText(returnAddress);
+                            } catch (IOException e) {
+
+                            }
+                        }
+                    }
+                });
 
     }
 

@@ -36,4 +36,6 @@ dependencies {
     compile 'com.github.navasmdc:MaterialDesign:1.5@aar'
     compile 'com.github.florent37:materialtextfield:1.0.7'
 
+    compile 'com.google.android.gms:play-services-location:11.8.0'
+
 }
