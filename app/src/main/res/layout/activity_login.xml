@@ -21,6 +21,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:text="login"
+        android:background="#616161"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -48,10 +49,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             app:mtf_animationDuration="250"
-            app:mtf_backgroundColor="#00b1d4"
+            app:mtf_backgroundColor="#212121"
             app:mtf_cardCollapsedHeight="1dp"
             app:mtf_image="@drawable/ic_email_white"
-            app:mtf_labelColor="#00b1d4">
+            app:mtf_labelColor="#212121">
 
             <EditText
                 android:id="@+id/editTextEmail"
@@ -82,10 +83,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             app:mtf_animationDuration="250"
-            app:mtf_backgroundColor="#00b1d4"
+            app:mtf_backgroundColor="#212121"
             app:mtf_cardCollapsedHeight="1dp"
             app:mtf_image="@drawable/ic_password_white"
-            app:mtf_labelColor="#00b1d4">
+            app:mtf_labelColor="#212121">
 
             <EditText
                 android:id="@+id/editTextPassword"
