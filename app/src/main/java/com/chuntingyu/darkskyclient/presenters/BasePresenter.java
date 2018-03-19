@@ -1,5 +1,7 @@
 package com.chuntingyu.darkskyclient.presenters;
 
+import android.content.Context;
+
 import com.chuntingyu.darkskyclient.models.DataManager;
 import com.chuntingyu.darkskyclient.views.MvpView;
 

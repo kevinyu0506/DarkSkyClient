@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        requestCurrentWeather(37.8267,-122.4233);
+//        requestCurrentWeather(37.8267,-122.4233);
 
         ButterKnife.bind(this);
 
@@ -161,6 +161,10 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
                                 List<Address> lstAddress = gc.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                                 String returnAddress = lstAddress.get(0).getAdminArea().toUpperCase();
                                 userLocation.setText(returnAddress);
+
+                                requestCurrentWeather(location.getLatitude(),location.getLongitude());
+
+
                             } catch (IOException e) {
 
                             }
@@ -186,7 +190,7 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
     public void onWeatherEvent(WeatherEvent weatherEvent) {
 
         Currently currently = weatherEvent.getWeather().getCurrently();
-        tempTextView.setText(String.valueOf(Math.round(currently.getTemperature())));
+        tempTextView.setText(String.valueOf(tempConverter(currently.getTemperature())));
 
         summaryTextView.setText(currently.getSummary());
 
@@ -226,4 +230,9 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
         startActivity(intent);
         finish();
     }
+
+    private int tempConverter(Double temp) {
+        return  (int)Math.round((temp - 32) * (5.0/9.0));
+    }
+
 }
