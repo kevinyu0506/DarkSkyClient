@@ -12,11 +12,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </ListView>
+            <TextView
+                android:id="@+id/hourlySummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="20dp"
+                android:layout_marginTop="330dp"
+                tools:text="Light rain stopping in 13 min., starting again 30 min. later." />
+
+        </ScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -94,22 +106,22 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Taipei" />
 
-    <TextView
-        android:id="@+id/hourlySummary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:textAlignment="center"
-        android:textColor="#ffffff"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewShow"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="Light rain stopping in 13 min., starting again 30 min. later." />
+    <!--<TextView-->
+        <!--android:id="@+id/hourlySummary"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:layout_marginEnd="16dp"-->
+        <!--android:layout_marginStart="16dp"-->
+        <!--android:textAlignment="center"-->
+        <!--android:textColor="#ffffff"-->
+        <!--android:textSize="20dp"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/textViewShow"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--tools:text="Light rain stopping in 13 min., starting again 30 min. later." />-->
 
     <TextView
         android:id="@+id/summaryTextView"
