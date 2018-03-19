@@ -18,12 +18,12 @@ public class Weather {
     @SerializedName("currently")
     @Expose
     private Currently currently;
-//    @SerializedName("minutely")
-//    @Expose
-//    private Minutely minutely;
-//    @SerializedName("hourly")
-//    @Expose
-//    private Hourly hourly;
+    @SerializedName("minutely")
+    @Expose
+    private Minutely minutely;
+    @SerializedName("hourly")
+    @Expose
+    private Hourly hourly;
 //    @SerializedName("daily")
 //    @Expose
 //    private Daily daily;
@@ -65,22 +65,22 @@ public class Weather {
     public void setCurrently(Currently currently) {
         this.currently = currently;
     }
-//
-//    public Minutely getMinutely() {
-//        return minutely;
-//    }
-//
-//    public void setMinutely(Minutely minutely) {
-//        this.minutely = minutely;
-//    }
-//
-//    public Hourly getHourly() {
-//        return hourly;
-//    }
-//
-//    public void setHourly(Hourly hourly) {
-//        this.hourly = hourly;
-//    }
+
+    public Minutely getMinutely() {
+        return minutely;
+    }
+
+    public void setMinutely(Minutely minutely) {
+        this.minutely = minutely;
+    }
+
+    public Hourly getHourly() {
+        return hourly;
+    }
+
+    public void setHourly(Hourly hourly) {
+        this.hourly = hourly;
+    }
 //
 //    public Daily getDaily() {
 //        return daily;

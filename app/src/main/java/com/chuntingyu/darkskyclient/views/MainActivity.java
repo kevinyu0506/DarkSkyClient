@@ -11,9 +11,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +22,9 @@ import com.chuntingyu.darkskyclient.MvpApp;
 import com.chuntingyu.darkskyclient.R;
 import com.chuntingyu.darkskyclient.events.ErrorEvent;
 import com.chuntingyu.darkskyclient.events.WeatherEvent;
+import com.chuntingyu.darkskyclient.models.Hourly;
+import com.chuntingyu.darkskyclient.models.Minutely;
+import com.chuntingyu.darkskyclient.models.Weather;
 import com.chuntingyu.darkskyclient.services.WeatherServiceProvider;
 
 import org.greenrobot.eventbus.EventBus;
@@ -68,6 +71,12 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
     @BindView(R.id.userLocation)
     TextView userLocation;
 
+    @BindView(R.id.mSwipeRefreshLayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
+    @BindView(R.id.hourlySummary)
+    TextView hourlySummary;
+
     MainPresenter mainPresenter;
 
     public static Intent getStartIntent(Context context) {
@@ -98,6 +107,25 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
         });
 
         mainPresenter.decideToRequestPermission();
+
+        /*
+         * Sets up a SwipeRefreshLayout.OnRefreshListener that is invoked when the user
+         * performs a swipe-to-refresh gesture.
+         */
+        mSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+//                        Log.i(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
+
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+
+                        showUserLocation();
+                    }
+                }
+        );
+
 
 
     }
@@ -189,10 +217,14 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWeatherEvent(WeatherEvent weatherEvent) {
 
-        Currently currently = weatherEvent.getWeather().getCurrently();
-        tempTextView.setText(String.valueOf(tempConverter(currently.getTemperature())));
+        Weather weather = weatherEvent.getWeather();
 
+        Currently currently = weather.getCurrently();
+        tempTextView.setText(String.valueOf(tempConverter(currently.getTemperature())));
         summaryTextView.setText(currently.getSummary());
+
+        Hourly hourly = weather.getHourly();
+        hourlySummary.setText(hourly.getSummary());
 
         Map<String, Integer> iconMap = new HashMap<>();
         iconMap.put("clear-day", R.drawable.ic_clear_day);
