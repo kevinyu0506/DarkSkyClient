@@ -1,5 +1,8 @@
 package com.chuntingyu.darkskyclient.presenters;
 
+import android.Manifest;
+import android.support.v4.app.ActivityCompat;
+
 import com.chuntingyu.darkskyclient.models.DataManager;
 import com.chuntingyu.darkskyclient.views.SplashMvpView;
 

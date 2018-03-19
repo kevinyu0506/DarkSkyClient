@@ -1,5 +1,8 @@
 package com.chuntingyu.darkskyclient.models;
 
+import android.Manifest;
+import android.support.v4.app.ActivityCompat;
+
 /**
  * Created by Kevin on 2018/3/14.
  */

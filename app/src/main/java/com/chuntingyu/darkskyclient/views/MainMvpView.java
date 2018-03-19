@@ -8,4 +8,9 @@ public interface MainMvpView extends MvpView {
 
     void openSplashActivity();
 
+    boolean checkPermission();
+
+    void requestPermission();
+
+    void showUserLocation();
 }

@@ -24,4 +24,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         getMvpView().openSplashActivity();
     }
 
+    @Override
+    public void decideToRequestPermission() {
+        if (!getMvpView().checkPermission()){
+            getMvpView().requestPermission();
+        } else {
+            getMvpView().showUserLocation();
+        }
+    }
 }

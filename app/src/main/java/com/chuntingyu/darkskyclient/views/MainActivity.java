@@ -84,21 +84,6 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
 
         ButterKnife.bind(this);
 
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_FINE_LOCATION);
-
-        } else {
-            showUserLocation();
-        }
-
-
-
         DataManager dataManager = ((MvpApp) getApplication()).getDataManager();
         mainPresenter = new MainPresenter(dataManager);
         mainPresenter.onAttach(this);
@@ -112,10 +97,54 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
             }
         });
 
+        mainPresenter.decideToRequestPermission();
+
 
     }
 
-    private void showUserLocation() {
+    @Override
+    public boolean checkPermission() {
+
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
+
+    }
+
+    @Override
+    public void requestPermission() {
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_FINE_LOCATION);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    showUserLocation();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+        }
+    }
+
+    @Override
+    public void showUserLocation() {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFusedLocationClient.getLastLocation()
