@@ -224,7 +224,7 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
         Weather weather = weatherEvent.getWeather();
 
         Currently currently = weather.getCurrently();
-        tempTextView.setText(String.valueOf(tempConverter(currently.getTemperature())));
+        tempTextView.setText(String.valueOf(tempConverter(currently.getTemperature())) + "\u00b0C");
         summaryTextView.setText(currently.getSummary());
 
         Hourly hourly = weather.getHourly();
