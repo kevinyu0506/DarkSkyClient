@@ -192,6 +192,10 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
 
                                 requestCurrentWeather(location.getLatitude(),location.getLongitude());
 
+                                if (mSwipeRefreshLayout.isRefreshing()) {
+                                    mSwipeRefreshLayout.setRefreshing(false);
+                                }
+
 
                             } catch (IOException e) {
 
