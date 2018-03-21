@@ -12,25 +12,32 @@
         android:scaleType="centerCrop"
         android:src="@drawable/weather" />
 
-
-    <com.gc.materialdesign.views.ButtonRectangle
-        android:id="@+id/buttonLogin"
-        android:layout_width="match_parent"
+    <android.widget.RelativeLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="90dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:text="login"
-        android:background="#616161"
+        android:layout_marginBottom="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintRight_toRightOf="parent">
+
+        <com.gc.materialdesign.views.ButtonRectangle
+            android:id="@+id/buttonLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOGIN"
+            android:background="#2b98f0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.widget.RelativeLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="150dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -49,10 +56,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             app:mtf_animationDuration="250"
-            app:mtf_backgroundColor="#616161"
+            app:mtf_backgroundColor="#2072b4"
             app:mtf_cardCollapsedHeight="1dp"
             app:mtf_image="@drawable/ic_email_white"
-            app:mtf_labelColor="#212121">
+            app:mtf_labelColor="#164c78">
 
             <EditText
                 android:id="@+id/editTextEmail"
@@ -61,7 +68,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:hint="Email"
+                android:hint="EMAIL"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -83,10 +90,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             app:mtf_animationDuration="250"
-            app:mtf_backgroundColor="#616161"
+            app:mtf_backgroundColor="#2072b4"
             app:mtf_cardCollapsedHeight="1dp"
             app:mtf_image="@drawable/ic_password_white"
-            app:mtf_labelColor="#212121">
+            app:mtf_labelColor="#164c78">
 
             <EditText
                 android:id="@+id/editTextPassword"
@@ -96,11 +103,22 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:hint="Password"
-                android:inputType="textVisiblePassword" />
+                android:hint="PASSWORD"
+                android:inputType="textPassword" />
 
         </com.github.florent37.materialtextfield.MaterialTextField>
 
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="WEATHER"
+        android:textSize="48dp"
+        android:textColor="@color/common_google_signin_btn_text_dark"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
