@@ -1,18 +1,14 @@
-package com.chuntingyu.darkskyclient.presenters;
-
-import android.Manifest;
-import android.support.v4.app.ActivityCompat;
+package com.chuntingyu.darkskyclient.applications;
 
 import com.chuntingyu.darkskyclient.models.DataManager;
-import com.chuntingyu.darkskyclient.views.SplashMvpView;
 
 /**
  * Created by Kevin on 2018/3/14.
  */
 
-public class SplashPresenter<V extends SplashMvpView> extends BasePresenter<V> implements SplashMvpPresenter<V> {
+public class SplashPresenterBase<V extends SplashMvpView> extends BasePresenterBase<V> implements SplashBaseMvpPresenter<V> {
 
-    public SplashPresenter(DataManager dataManager) {
+    public SplashPresenterBase(DataManager dataManager) {
         super(dataManager);
     }
 

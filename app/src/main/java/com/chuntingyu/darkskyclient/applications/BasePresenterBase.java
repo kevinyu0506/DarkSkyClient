@@ -1,21 +1,18 @@
-package com.chuntingyu.darkskyclient.presenters;
-
-import android.content.Context;
+package com.chuntingyu.darkskyclient.applications;
 
 import com.chuntingyu.darkskyclient.models.DataManager;
-import com.chuntingyu.darkskyclient.views.MvpView;
 
 /**
  * Created by Kevin on 2018/3/14.
  */
-public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
+public class BasePresenterBase<V extends BaseMvpView> implements BaseMvpPresenter<V> {
 
     private V mMvpView;
 
     DataManager mDataManager;
 
 
-    public BasePresenter(DataManager dataManager){
+    public BasePresenterBase(DataManager dataManager){
         mDataManager = dataManager;
     }
 

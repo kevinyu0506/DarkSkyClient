@@ -1,4 +1,4 @@
-package com.chuntingyu.darkskyclient.views;
+package com.chuntingyu.darkskyclient.activities.main;
 
 import android.Manifest;
 import android.content.Context;
@@ -18,14 +18,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chuntingyu.darkskyclient.MvpApp;
+import com.chuntingyu.darkskyclient.applications.BaseActivity;
+import com.chuntingyu.darkskyclient.applications.WeatherApp;
 import com.chuntingyu.darkskyclient.R;
+import com.chuntingyu.darkskyclient.applications.SplashActivity;
 import com.chuntingyu.darkskyclient.events.ErrorEvent;
 import com.chuntingyu.darkskyclient.events.WeatherEvent;
 import com.chuntingyu.darkskyclient.models.Hourly;
-import com.chuntingyu.darkskyclient.models.Minutely;
 import com.chuntingyu.darkskyclient.models.Weather;
-import com.chuntingyu.darkskyclient.services.WeatherServiceProvider;
+import com.chuntingyu.darkskyclient.network.WeatherNao;
+//import com.chuntingyu.darkskyclient.services.WeatherServiceProvider;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,15 +41,21 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
+import retrofit2.Response;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+
 import com.chuntingyu.darkskyclient.models.Currently;
 import com.chuntingyu.darkskyclient.models.DataManager;
-import com.chuntingyu.darkskyclient.presenters.MainPresenter;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-public class MainActivity extends BaseActivity implements MainMvpView  {
+@RuntimePermissions
+public class MainActivity extends BaseActivity implements MainMvpView {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int MY_PERMISSIONS_FINE_LOCATION = 0;
@@ -77,7 +85,7 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
     @BindView(R.id.hourlySummary)
     TextView hourlySummary;
 
-    MainPresenter mainPresenter;
+    MainPresenterBase mainPresenter;
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -89,12 +97,10 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        requestCurrentWeather(37.8267,-122.4233);
-
         ButterKnife.bind(this);
 
-        DataManager dataManager = ((MvpApp) getApplication()).getDataManager();
-        mainPresenter = new MainPresenter(dataManager);
+        DataManager dataManager = ((WeatherApp) getApplication()).getDataManager();
+        mainPresenter = new MainPresenterBase(dataManager);
         mainPresenter.onAttach(this);
 
         textViewShow.setText("Welcome " + mainPresenter.getEmailId() + "!");
@@ -105,8 +111,6 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
                 mainPresenter.setUserLoggedOut();
             }
         });
-
-        mainPresenter.decideToRequestPermission();
 
         /*
          * Sets up a SwipeRefreshLayout.OnRefreshListener that is invoked when the user
@@ -121,59 +125,23 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
                         // This method performs the actual data-refresh operation.
                         // The method calls setRefreshing(false) when it's finished.
 
-                        showUserLocation();
+                        MainActivityPermissionsDispatcher.showUserLocationWithPermissionCheck(MainActivity.this);
+//                        showUserLocation();
                     }
                 }
         );
-
-
-
-    }
-
-    @Override
-    public boolean checkPermission() {
-
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED;
-
-    }
-
-    @Override
-    public void requestPermission() {
-
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                MY_PERMISSIONS_FINE_LOCATION);
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                    showUserLocation();
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
+    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     @Override
     public void showUserLocation() {
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -190,7 +158,63 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
                                 String returnAddress = lstAddress.get(0).getAdminArea().toUpperCase();
                                 userLocation.setText(returnAddress);
 
-                                requestCurrentWeather(location.getLatitude(),location.getLongitude());
+//                                requestCurrentWeather(location.getLatitude(),location.getLongitude());
+
+                                double lat = location.getLatitude();
+                                double lon = location.getLongitude();
+
+                                WeatherNao.getWeather(lat, lon).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Response<Weather>>() {
+                                    @Override
+                                    public void onNext(Response<Weather> response) {
+                                        unsubscribe();
+                                        if (response.isSuccessful()) {
+                                            Weather weather = response.body();
+                                            if (weather != null) {
+                                                Currently currently = weather.getCurrently();
+                                                Log.e(TAG, "Temperature = " + currently.getTemperature());
+//                                                EventBus.getDefault().post(new WeatherEvent(weather));
+
+                                                tempTextView.setText(String.valueOf(tempConverter(currently.getTemperature())) + "\u00b0C");
+                                                summaryTextView.setText(currently.getSummary());
+
+                                                Hourly hourly = weather.getHourly();
+                                                hourlySummary.setText(hourly.getSummary());
+
+                                                Map<String, Integer> iconMap = new HashMap<>();
+                                                iconMap.put("clear-day", R.drawable.ic_clear_day);
+                                                iconMap.put("clear-night", R.drawable.ic_clear_night);
+                                                iconMap.put("rain", R.drawable.ic_rain);
+                                                iconMap.put("snow", R.drawable.ic_snow);
+                                                iconMap.put("sleet", R.drawable.ic_sleet);
+                                                iconMap.put("wind", R.drawable.ic_wind);
+                                                iconMap.put("fog", R.drawable.ic_fog);
+                                                iconMap.put("cloudy", R.drawable.ic_cloudy);
+                                                iconMap.put("partly-cloudy-day", R.drawable.ic_partly_cloudy_day);
+                                                iconMap.put("partly-cloudy-night", R.drawable.ic_partly_cloudy_night);
+                                                iconMap.put("thunderstorm", R.drawable.ic_thunderstorm);
+
+
+                                                iconImageView.setImageResource(iconMap.get(currently.getIcon()));
+
+                                            } else {
+                                                Log.e(TAG, "No response, check your key");
+//                                                EventBus.getDefault().post(new ErrorEvent("Unable to connect weather server"));
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.e(TAG, "onFailure, unable to get weather data");
+//                                        Toast.makeText("Unable to connect weather server", Toast.LENGTH_SHORT).show();
+//                                        EventBus.getDefault().post(new ErrorEvent("Unable to connect weather server"));
+                                    }
+                                });
 
                                 if (mSwipeRefreshLayout.isRefreshing()) {
                                     mSwipeRefreshLayout.setRefreshing(false);
@@ -203,61 +227,18 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
                         }
                     }
                 });
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWeatherEvent(WeatherEvent weatherEvent) {
-
-        Weather weather = weatherEvent.getWeather();
-
-        Currently currently = weather.getCurrently();
-        tempTextView.setText(String.valueOf(tempConverter(currently.getTemperature())) + "\u00b0C");
-        summaryTextView.setText(currently.getSummary());
-
-        Hourly hourly = weather.getHourly();
-        hourlySummary.setText(hourly.getSummary());
-
-        Map<String, Integer> iconMap = new HashMap<>();
-        iconMap.put("clear-day", R.drawable.ic_clear_day);
-        iconMap.put("clear-night", R.drawable.ic_clear_night);
-        iconMap.put("rain", R.drawable.ic_rain);
-        iconMap.put("snow", R.drawable.ic_snow);
-        iconMap.put("sleet", R.drawable.ic_sleet);
-        iconMap.put("wind", R.drawable.ic_wind);
-        iconMap.put("fog", R.drawable.ic_fog);
-        iconMap.put("cloudy", R.drawable.ic_cloudy);
-        iconMap.put("partly-cloudy-day", R.drawable.ic_partly_cloudy_day);
-        iconMap.put("partly-cloudy-night", R.drawable.ic_partly_cloudy_night);
-        iconMap.put("thunderstorm", R.drawable.ic_thunderstorm);
-
-
-        iconImageView.setImageResource(iconMap.get(currently.getIcon()));
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onErrorEvent(ErrorEvent errorEvent){
-        Toast.makeText(this,"Unable to connect weather server", Toast.LENGTH_SHORT).show();
-    }
-
-    private void requestCurrentWeather(double lat, double lon) {
-
-        WeatherServiceProvider weatherServiceProvider = new WeatherServiceProvider();
-        weatherServiceProvider.getWeather(lat, lon);
-
     }
 
     @Override
@@ -268,7 +249,7 @@ public class MainActivity extends BaseActivity implements MainMvpView  {
     }
 
     private int tempConverter(Double temp) {
-        return  (int)Math.round((temp - 32) * (5.0/9.0));
+        return (int) Math.round((temp - 32) * (5.0 / 9.0));
     }
 
 }

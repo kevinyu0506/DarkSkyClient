@@ -1,18 +1,18 @@
-package com.chuntingyu.darkskyclient.views;
+package com.chuntingyu.darkskyclient.activities.login;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.chuntingyu.darkskyclient.CommonUtils;
-import com.chuntingyu.darkskyclient.MvpApp;
+import com.chuntingyu.darkskyclient.activities.main.MainActivity;
+import com.chuntingyu.darkskyclient.applications.BaseActivity;
+import com.chuntingyu.darkskyclient.tools.CommonUtils;
+import com.chuntingyu.darkskyclient.applications.WeatherApp;
 import com.chuntingyu.darkskyclient.R;
 import com.chuntingyu.darkskyclient.models.DataManager;
-import com.chuntingyu.darkskyclient.presenters.LoginPresenter;
 import com.gc.materialdesign.views.ButtonRectangle;
 
 import butterknife.BindView;
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
 
-    LoginPresenter loginPresenter;
+    LoginPresenterBase loginPresenter;
 
     @BindView(R.id.editTextEmail)
     EditText editTextEmail;
@@ -41,8 +41,8 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        DataManager dataManager = ((MvpApp) getApplication()).getDataManager();
-        loginPresenter = new LoginPresenter(dataManager);
+        DataManager dataManager = ((WeatherApp) getApplication()).getDataManager();
+        loginPresenter = new LoginPresenterBase(dataManager);
 
         loginPresenter.onAttach(this);
 

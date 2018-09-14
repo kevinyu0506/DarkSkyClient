@@ -1,23 +1,19 @@
-package com.chuntingyu.darkskyclient.views;
+package com.chuntingyu.darkskyclient.applications;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 
-import com.chuntingyu.darkskyclient.MvpApp;
 import com.chuntingyu.darkskyclient.R;
 import com.chuntingyu.darkskyclient.models.DataManager;
-import com.chuntingyu.darkskyclient.presenters.SplashPresenter;
+import com.chuntingyu.darkskyclient.activities.login.LoginActivity;
+import com.chuntingyu.darkskyclient.activities.main.MainActivity;
 
 public class SplashActivity extends BaseActivity implements SplashMvpView {
 
     private static final int MY_PERMISSIONS_FINE_LOCATION = 0;
-    SplashPresenter mSplashPresenter;
+    SplashPresenterBase mSplashPresenter;
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, SplashActivity.class);
@@ -29,9 +25,9 @@ public class SplashActivity extends BaseActivity implements SplashMvpView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        DataManager dataManager = ((MvpApp) getApplication()).getDataManager();
+        DataManager dataManager = ((WeatherApp) getApplication()).getDataManager();
 
-        mSplashPresenter = new SplashPresenter(dataManager);
+        mSplashPresenter = new SplashPresenterBase(dataManager);
 
         mSplashPresenter.onAttach(this);
 
