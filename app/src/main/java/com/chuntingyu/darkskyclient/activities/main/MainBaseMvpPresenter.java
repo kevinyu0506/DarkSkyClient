@@ -12,6 +12,10 @@ public interface MainBaseMvpPresenter<V extends MainMvpView> extends BaseMvpPres
 
     void setUserLoggedOut();
 
+    void getWeather();
+
+    void showUserLocation();
+
 //    void decideToRequestPermission();
 
 }

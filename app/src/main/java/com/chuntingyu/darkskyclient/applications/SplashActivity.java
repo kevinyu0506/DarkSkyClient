@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 
 import com.chuntingyu.darkskyclient.R;
-import com.chuntingyu.darkskyclient.models.DataManager;
+import com.chuntingyu.darkskyclient.tools.coredata.DataManager;
 import com.chuntingyu.darkskyclient.activities.login.LoginActivity;
 import com.chuntingyu.darkskyclient.activities.main.MainActivity;
 
@@ -32,7 +32,6 @@ public class SplashActivity extends BaseActivity implements SplashMvpView {
         mSplashPresenter.onAttach(this);
 
         mSplashPresenter.decideNextActivity();
-
     }
 
     @Override

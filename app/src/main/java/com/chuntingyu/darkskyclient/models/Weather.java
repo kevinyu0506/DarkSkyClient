@@ -24,9 +24,9 @@ public class Weather {
     @SerializedName("hourly")
     @Expose
     private Hourly hourly;
-//    @SerializedName("daily")
-//    @Expose
-//    private Daily daily;
+    @SerializedName("daily")
+    @Expose
+    private Daily daily;
 //    @SerializedName("flags")
 //    @Expose
 //    private Flags flags;
@@ -81,14 +81,14 @@ public class Weather {
     public void setHourly(Hourly hourly) {
         this.hourly = hourly;
     }
-//
-//    public Daily getDaily() {
-//        return daily;
-//    }
-//
-//    public void setDaily(Daily daily) {
-//        this.daily = daily;
-//    }
+
+    public Daily getDaily() {
+        return daily;
+    }
+
+    public void setDaily(Daily daily) {
+        this.daily = daily;
+    }
 //
 //    public Flags getFlags() {
 //        return flags;

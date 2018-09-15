@@ -1,31 +1,28 @@
 package com.chuntingyu.darkskyclient.applications;
 
-import com.chuntingyu.darkskyclient.models.DataManager;
+import com.chuntingyu.darkskyclient.tools.coredata.DataManager;
 
 /**
  * Created by Kevin on 2018/3/14.
  */
 public class BasePresenterBase<V extends BaseMvpView> implements BaseMvpPresenter<V> {
-
-    private V mMvpView;
-
-    DataManager mDataManager;
-
+    private V mvpView;
+    private DataManager dataManager;
 
     public BasePresenterBase(DataManager dataManager){
-        mDataManager = dataManager;
+        this.dataManager = dataManager;
     }
 
     @Override
     public void onAttach(V mvpView) {
-        mMvpView = mvpView;
+        this.mvpView = mvpView;
     }
 
     public V getMvpView() {
-        return mMvpView;
+        return mvpView;
     }
 
     public DataManager getDataManager() {
-        return mDataManager;
+        return dataManager;
     }
 }

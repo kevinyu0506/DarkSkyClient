@@ -2,8 +2,8 @@ package com.chuntingyu.darkskyclient.applications;
 
 import android.app.Application;
 
-import com.chuntingyu.darkskyclient.models.DataManager;
-import com.chuntingyu.darkskyclient.models.SharedPrefsHelper;
+import com.chuntingyu.darkskyclient.tools.coredata.DataManager;
+import com.chuntingyu.darkskyclient.tools.coredata.SharedPreferencesHelper;
 
 /**
  * Created by Kevin on 2018/3/14.
@@ -17,13 +17,11 @@ public class WeatherApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        SharedPrefsHelper sharedPrefsHelper = new SharedPrefsHelper(getApplicationContext());
-        dataManager = new DataManager(sharedPrefsHelper);
-
+        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(getApplicationContext());
+        dataManager = new DataManager(sharedPreferencesHelper);
     }
 
     public DataManager getDataManager() {
         return dataManager;
     }
-
 }

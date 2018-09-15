@@ -1,7 +1,7 @@
 package com.chuntingyu.darkskyclient.activities.login;
 
 import com.chuntingyu.darkskyclient.applications.BasePresenterBase;
-import com.chuntingyu.darkskyclient.models.DataManager;
+import com.chuntingyu.darkskyclient.tools.coredata.DataManager;
 
 /**
  * Created by Kevin on 2018/3/14.
@@ -16,7 +16,7 @@ public class LoginPresenterBase<V extends LoginMvpView> extends BasePresenterBas
     @Override
     public void startLogin(String emailId) {
         getDataManager().saveEmailId(emailId);
-        getDataManager().setLoggedIn();
+        getDataManager().setLoggedIn(true);
         getMvpView().openMainActivity();
     }
 

@@ -12,13 +12,14 @@ import com.chuntingyu.darkskyclient.applications.BaseActivity;
 import com.chuntingyu.darkskyclient.tools.CommonUtils;
 import com.chuntingyu.darkskyclient.applications.WeatherApp;
 import com.chuntingyu.darkskyclient.R;
-import com.chuntingyu.darkskyclient.models.DataManager;
+import com.chuntingyu.darkskyclient.tools.coredata.DataManager;
 import com.gc.materialdesign.views.ButtonRectangle;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
+    private static final String TAG = "LoginActivity";
 
     LoginPresenterBase loginPresenter;
 
@@ -54,7 +55,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 onLoginButtonClick();
             }
         });
-
     }
 
     @Override
@@ -66,7 +66,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @Override
     public void onLoginButtonClick() {
-
         String emailId = editTextEmail.getText().toString();
         String password = editTextPassword.getText().toString();
 
@@ -81,6 +80,5 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         }
 
         loginPresenter.startLogin(emailId);
-
     }
 }

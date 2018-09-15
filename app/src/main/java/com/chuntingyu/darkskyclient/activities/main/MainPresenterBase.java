@@ -1,7 +1,7 @@
 package com.chuntingyu.darkskyclient.activities.main;
 
 import com.chuntingyu.darkskyclient.applications.BasePresenterBase;
-import com.chuntingyu.darkskyclient.models.DataManager;
+import com.chuntingyu.darkskyclient.tools.coredata.DataManager;
 
 /**
  * Created by Kevin on 2018/3/14.
@@ -24,7 +24,17 @@ public class MainPresenterBase<V extends MainMvpView> extends BasePresenterBase<
         getMvpView().openSplashActivity();
     }
 
-//    @Override
+    @Override
+    public void getWeather() {
+
+    }
+
+    @Override
+    public void showUserLocation() {
+
+    }
+
+    //    @Override
 //    public void decideToRequestPermission() {
 //        if (!getMvpView().checkPermission()){
 //            getMvpView().requestPermission();

@@ -1,11 +1,11 @@
-
 package com.chuntingyu.darkskyclient.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Minutely {
+import java.util.List;
+
+public class Daily {
 
     @SerializedName("summary")
     @Expose
@@ -13,9 +13,9 @@ public class Minutely {
     @SerializedName("icon")
     @Expose
     private String icon;
-//    @SerializedName("data")
-//    @Expose
-//    private List<Data> data = null;
+    @SerializedName("data")
+    @Expose
+    private List<Data> datas = null;
 
     public String getSummary() {
         return summary;
@@ -33,12 +33,12 @@ public class Minutely {
         this.icon = icon;
     }
 
-//    public List<Data> getData() {
-//        return data;
-//    }
-//
-//    public void setData(List<Data> data) {
-//        this.data = data;
-//    }
+    public List<Data> getData() {
+        return datas;
+    }
+
+    public void setData(List<Data> data) {
+        this.datas = data;
+    }
 
 }

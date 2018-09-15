@@ -1,10 +1,9 @@
-
 package com.chuntingyu.darkskyclient.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Datum__ {
+public class Data {
 
     @SerializedName("time")
     @Expose
@@ -95,7 +94,7 @@ public class Datum__ {
     private Integer uvIndexTime;
     @SerializedName("visibility")
     @Expose
-    private Integer visibility;
+    private Double visibility;
     @SerializedName("ozone")
     @Expose
     private Double ozone;
@@ -356,11 +355,11 @@ public class Datum__ {
         this.uvIndexTime = uvIndexTime;
     }
 
-    public Integer getVisibility() {
+    public Double getVisibility() {
         return visibility;
     }
 
-    public void setVisibility(Integer visibility) {
+    public void setVisibility(Double visibility) {
         this.visibility = visibility;
     }
 

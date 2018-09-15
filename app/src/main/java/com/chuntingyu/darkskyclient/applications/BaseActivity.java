@@ -1,11 +1,11 @@
 package com.chuntingyu.darkskyclient.applications;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 
 /**
  * Created by Kevin on 2018/3/14.
  */
 
-public class BaseActivity extends AppCompatActivity implements BaseMvpView {
+public class BaseActivity extends Activity implements BaseMvpView {
 
 }

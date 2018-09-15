@@ -11,5 +11,4 @@ public interface LoginMvpView extends BaseMvpView {
     void openMainActivity();
 
     void onLoginButtonClick();
-
 }

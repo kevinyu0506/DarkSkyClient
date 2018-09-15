@@ -1,6 +1,6 @@
 package com.chuntingyu.darkskyclient.applications;
 
-import com.chuntingyu.darkskyclient.models.DataManager;
+import com.chuntingyu.darkskyclient.tools.coredata.DataManager;
 
 /**
  * Created by Kevin on 2018/3/14.
