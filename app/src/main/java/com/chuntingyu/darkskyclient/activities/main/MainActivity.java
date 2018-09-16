@@ -3,6 +3,7 @@ package com.chuntingyu.darkskyclient.activities.main;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ import com.chuntingyu.darkskyclient.network.WeatherNao;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,6 +51,9 @@ import com.chuntingyu.darkskyclient.models.Currently;
 import com.chuntingyu.darkskyclient.tools.CommonUtils;
 import com.chuntingyu.darkskyclient.tools.IconHelper;
 import com.chuntingyu.darkskyclient.tools.KYMath;
+import com.chuntingyu.darkskyclient.tools.KYTime;
+import com.chuntingyu.darkskyclient.tools.acplibrary.ACProgressConstant;
+import com.chuntingyu.darkskyclient.tools.acplibrary.ACProgressFlower;
 import com.chuntingyu.darkskyclient.tools.coredata.DataManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -63,6 +70,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private MainPresenterBase mainPresenter;
     private LayoutInflater inflater;
     private DailyReportAdapter dailyReportAdapter = new DailyReportAdapter();
+    private ACProgressFlower pd;
+    private Animation updateAnim;
 
     @BindView(R.id.tempTextView)
     TextView tempTextView;
@@ -76,12 +85,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     LinearLayout buttonLogout;
     @BindView(R.id.userLocation)
     TextView userLocation;
-    @BindView(R.id.mSwipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.hourlySummary)
     TextView hourlySummary;
     @BindView(R.id.center_recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.update_button)
+    ImageView updateBtn;
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -111,28 +120,24 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         MainActivityPermissionsDispatcher.showUserLocationWithPermissionCheck(this);
         MainActivityPermissionsDispatcher.getWeatherWithPermissionCheck(this);
 
-        /*
-         * Sets up a SwipeRefreshLayout.OnRefreshListener that is invoked when the user
-         * performs a swipe-to-refresh gesture.
-         */
-        mSwipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-//                        Log.i(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
-                        // This method performs the actual data-refresh operation.
-                        // The method calls setRefreshing(false) when it's finished.
-                        MainActivityPermissionsDispatcher.showUserLocationWithPermissionCheck(MainActivity.this);
-                        MainActivityPermissionsDispatcher.getWeatherWithPermissionCheck(MainActivity.this);
-                    }
-                }
-        );
+        updateBtn.setOnClickListener(updateButtonClickListener);
+        updateAnim = AnimationUtils.loadAnimation(this, R.anim.update_rotate_anim);
+        updateBtn.startAnimation(updateAnim);
 
         inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         recyclerView.setAdapter(dailyReportAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
     }
+
+    private View.OnClickListener updateButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            updateBtn.startAnimation(updateAnim);
+            MainActivityPermissionsDispatcher.showUserLocationWithPermissionCheck(MainActivity.this);
+            MainActivityPermissionsDispatcher.getWeatherWithPermissionCheck(MainActivity.this);
+        }
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -143,6 +148,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @NeedsPermission(Manifest.permission.INTERNET)
     public void getWeather() {
+        pd = new ACProgressFlower.Builder(this).direction(ACProgressConstant.DIRECT_CLOCKWISE).themeColor(Color.WHITE).build();
+        pd.show();
+//        if (updateBtn != null) {
+//            updateBtn.startAnimation(updateAnim);
+//        }
+
         WeatherNao.getWeather(lat, lon).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Response<Weather>>() {
             @Override
             public void onNext(Response<Weather> response) {
@@ -167,6 +178,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     } else {
                         Log.e(TAG, "No response, check your key");
                     }
+                    pd.dismiss();
+                    updateBtn.clearAnimation();
                 }
             }
 
@@ -178,6 +191,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, "onFailure, unable to get weather data");
+                pd.dismiss();
+                updateBtn.clearAnimation();
 //                Toast.makeText("Unable to connect weather server", Toast.LENGTH_SHORT).show();
 //                EventBus.getDefault().post(new ErrorEvent("Unable to connect weather server"));
             }
@@ -204,9 +219,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                                 String returnAddress = lstAddress.get(0).getAdminArea().toUpperCase();
                                 userLocation.setText(returnAddress);
 
-                                if (mSwipeRefreshLayout.isRefreshing()) {
-                                    mSwipeRefreshLayout.setRefreshing(false);
-                                }
+//                                if (mSwipeRefreshLayout.isRefreshing()) {
+//                                    mSwipeRefreshLayout.setRefreshing(false);
+//                                }
                             } catch (IOException e) {
 
                             }
@@ -238,7 +253,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             holder.setTempHigh(String.valueOf(tempHigh));
             int tempLow = CommonUtils.tempConverter(dailyData.getTemperatureLow());
             holder.setTempLow(String.valueOf(tempLow));
-            holder.setWeekday("MONDAY");
+            String day = KYTime.getDayOfWeek(dailyData.getTime());
+            holder.setWeekday(day);
         }
 
         @Override

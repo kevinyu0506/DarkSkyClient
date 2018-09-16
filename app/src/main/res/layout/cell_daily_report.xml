@@ -26,6 +26,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="MONDAY"
+            android:textSize="18sp"
             android:textColor="@color/primary_text" />
 
     </LinearLayout>
@@ -52,14 +53,19 @@
         android:orientation="horizontal"
         android:weightSum="120">
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5" />
+
         <TextView
             android:id="@+id/cell_daily_report_temp_low"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="55"
+            android:layout_weight="50"
             android:gravity="center"
             android:textColor="@color/primary_text"
-            android:textSize="22sp"
+            android:textSize="16sp"
             tools:text="22\u00b0C" />
 
         <TextView
@@ -69,17 +75,22 @@
             android:gravity="center"
             android:text="-"
             android:textColor="@color/primary_text"
-            android:textSize="28sp" />
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/cell_daily_report_temp_high"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="55"
+            android:layout_weight="50"
             android:gravity="center"
             android:textColor="@color/primary_text"
-            android:textSize="22sp"
+            android:textSize="16sp"
             tools:text="28\u00b0C" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5" />
 
     </LinearLayout>
 
