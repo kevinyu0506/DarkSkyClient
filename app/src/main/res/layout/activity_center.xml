@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mSwipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="vertical"
+        android:weightSum="667">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="35">
+
+            <TextView
+                android:id="@+id/textViewShow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="welocme..." />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="15" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="60"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="375">
+
+            <TextView
+                android:id="@+id/userLocation"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="300"
+                android:gravity="center_vertical"
+                android:text="TAIPEI"
+                android:textAlignment="center"
+                android:textSize="40sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="45"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="375">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="200">
+
+                <TextView
+                    android:id="@+id/hourlySummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Light rain stopping in 13 min, starting again 30 min later."
+                    android:textAlignment="center"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="90"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="375">
+
+            <TextView
+                android:id="@+id/tempTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="150"
+                android:gravity="center"
+                android:textSize="60sp"
+                tools:text="30\u00b0C" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="90"
+                android:orientation="vertical"
+                android:weightSum="90">
+
+                <ImageView
+                    android:id="@+id/iconImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="70"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_clear_day"
+                    android:tint="#ffffff" />
+
+                <TextView
+                    android:id="@+id/summaryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="20"
+                    android:text="Clear day"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="360"
+            android:clipChildren="false"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="360">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/center_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="280"
+                android:clipChildren="false" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="375">
+
+            <LinearLayout
+                android:id="@+id/buttonLogout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="100"
+                android:background="@drawable/rounded_corner"
+                android:backgroundTint="#333333">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Log out"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="22" />
+
+    </LinearLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>

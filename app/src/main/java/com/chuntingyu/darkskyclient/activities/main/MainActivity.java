@@ -9,27 +9,31 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chuntingyu.darkskyclient.applications.BaseActivity;
 import com.chuntingyu.darkskyclient.applications.SplashActivity;
 import com.chuntingyu.darkskyclient.applications.WeatherApp;
 import com.chuntingyu.darkskyclient.R;
+import com.chuntingyu.darkskyclient.models.Daily;
+import com.chuntingyu.darkskyclient.models.Data;
 import com.chuntingyu.darkskyclient.models.Hourly;
 import com.chuntingyu.darkskyclient.models.Weather;
 import com.chuntingyu.darkskyclient.network.WeatherNao;
 //import com.chuntingyu.darkskyclient.services.WeatherServiceProvider;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,8 +44,10 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
 import com.chuntingyu.darkskyclient.models.Currently;
+import com.chuntingyu.darkskyclient.tools.CommonUtils;
+import com.chuntingyu.darkskyclient.tools.IconHelper;
+import com.chuntingyu.darkskyclient.tools.KYMath;
 import com.chuntingyu.darkskyclient.tools.coredata.DataManager;
-import com.gc.materialdesign.views.ButtonRectangle;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -53,32 +59,29 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private FusedLocationProviderClient fusedLocationClient;
     private double lat;
     private double lon;
-
-    MainPresenterBase mainPresenter;
+    private List<Data> dailyDatas = new ArrayList<>();
+    private MainPresenterBase mainPresenter;
+    private LayoutInflater inflater;
+    private DailyReportAdapter dailyReportAdapter = new DailyReportAdapter();
 
     @BindView(R.id.tempTextView)
     TextView tempTextView;
-
     @BindView(R.id.iconImageView)
     ImageView iconImageView;
-
     @BindView(R.id.summaryTextView)
     TextView summaryTextView;
-
     @BindView(R.id.textViewShow)
     TextView textViewShow;
-
     @BindView(R.id.buttonLogout)
-    ButtonRectangle buttonLogout;
-
+    LinearLayout buttonLogout;
     @BindView(R.id.userLocation)
     TextView userLocation;
-
     @BindView(R.id.mSwipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-
     @BindView(R.id.hourlySummary)
     TextView hourlySummary;
+    @BindView(R.id.center_recycler_view)
+    RecyclerView recyclerView;
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -88,7 +91,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_center);
 
         ButterKnife.bind(this);
 
@@ -119,12 +122,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 //                        Log.i(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
                         // This method performs the actual data-refresh operation.
                         // The method calls setRefreshing(false) when it's finished.
-
                         MainActivityPermissionsDispatcher.showUserLocationWithPermissionCheck(MainActivity.this);
                         MainActivityPermissionsDispatcher.getWeatherWithPermissionCheck(MainActivity.this);
                     }
                 }
         );
+
+        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        recyclerView.setAdapter(dailyReportAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
     }
 
     @Override
@@ -145,31 +152,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     if (weather != null) {
                         Currently currently = weather.getCurrently();
                         Log.e(TAG, "Temperature = " + currently.getTemperature());
-//                        EventBus.getDefault().post(new WeatherEvent(weather));
 
-                        tempTextView.setText(String.valueOf(tempConverter(currently.getTemperature())) + "\u00b0C");
+                        tempTextView.setText(String.valueOf(CommonUtils.tempConverter(currently.getTemperature())) + "\u00b0C");
                         summaryTextView.setText(currently.getSummary());
 
                         Hourly hourly = weather.getHourly();
                         hourlySummary.setText(hourly.getSummary());
 
-                        Map<String, Integer> iconMap = new HashMap<>();
-                        iconMap.put("clear-day", R.drawable.ic_clear_day);
-                        iconMap.put("clear-night", R.drawable.ic_clear_night);
-                        iconMap.put("rain", R.drawable.ic_rain);
-                        iconMap.put("snow", R.drawable.ic_snow);
-                        iconMap.put("sleet", R.drawable.ic_sleet);
-                        iconMap.put("wind", R.drawable.ic_wind);
-                        iconMap.put("fog", R.drawable.ic_fog);
-                        iconMap.put("cloudy", R.drawable.ic_cloudy);
-                        iconMap.put("partly-cloudy-day", R.drawable.ic_partly_cloudy_day);
-                        iconMap.put("partly-cloudy-night", R.drawable.ic_partly_cloudy_night);
-                        iconMap.put("thunderstorm", R.drawable.ic_thunderstorm);
+                        dailyDatas = weather.getDaily().getData();
+                        dailyReportAdapter.notifyDataSetChanged();
 
-                        iconImageView.setImageResource(iconMap.get(currently.getIcon()));
+                        Integer iconResource = IconHelper.getIconResource(currently.getIcon());
+                        iconImageView.setImageResource(iconResource);
                     } else {
                         Log.e(TAG, "No response, check your key");
-//                        EventBus.getDefault().post(new ErrorEvent("Unable to connect weather server"));
                     }
                 }
             }
@@ -220,26 +216,78 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-//        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-//        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
     public void openSplashActivity() {
         Intent intent = SplashActivity.getStartIntent(this);
         startActivity(intent);
         finish();
     }
 
-    private int tempConverter(Double temp) {
-        return (int) Math.round((temp - 32) * (5.0 / 9.0));
+    private class DailyReportAdapter extends RecyclerView.Adapter<DailyReportViewHolder> {
+        @Override
+        public DailyReportViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = inflater.inflate(R.layout.cell_daily_report, parent, false);
+            return new DailyReportViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(DailyReportViewHolder holder, int position) {
+            Data dailyData = dailyDatas.get(position);
+            holder.setIcon(dailyData.getIcon());
+            holder.setSummary(dailyData.getSummary());
+            int tempHigh = CommonUtils.tempConverter(dailyData.getTemperatureHigh());
+            holder.setTempHigh(String.valueOf(tempHigh));
+            int tempLow = CommonUtils.tempConverter(dailyData.getTemperatureLow());
+            holder.setTempLow(String.valueOf(tempLow));
+            holder.setWeekday("MONDAY");
+        }
+
+        @Override
+        public int getItemCount() {
+            return dailyDatas.size();
+        }
+    }
+
+    public class DailyReportViewHolder extends RecyclerView.ViewHolder {
+        View root;
+        ImageView icon;
+        TextView summary;
+        TextView tempHigh;
+        TextView tempLow;
+        TextView weekday;
+
+        public DailyReportViewHolder(View view) {
+            super(view);
+            root = view.findViewById(R.id.cell_daily_report_root);
+            icon = view.findViewById(R.id.cell_daily_report_icon);
+            summary = view.findViewById(R.id.cell_daily_report_summary);
+            tempHigh = view.findViewById(R.id.cell_daily_report_temp_high);
+            tempLow = view.findViewById(R.id.cell_daily_report_temp_low);
+            weekday = view.findViewById(R.id.cell_daily_report_weekday);
+
+            root.getLayoutParams().height = KYMath.screenSize().y * 280/667;
+            root.getLayoutParams().width = KYMath.screenSize().x * 120/375;
+        }
+
+        public void setIcon(String resource) {
+            Integer imageResource = IconHelper.getIconResource(resource);
+            this.icon.setImageResource(Integer.valueOf(imageResource));
+        }
+
+        public void setSummary(String summary) {
+            this.summary.setText(summary);
+        }
+
+        public void setTempHigh(String temp) {
+            this.tempHigh.setText(temp+"\u00b0C");
+        }
+
+        public void setTempLow(String temp) {
+            this.tempLow.setText(temp+"\u00b0C");
+        }
+
+        public void setWeekday(String weekday) {
+            this.weekday.setText(weekday);
+        }
     }
 
 }

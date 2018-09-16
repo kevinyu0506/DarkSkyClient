@@ -15,8 +15,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background"
-            >
+            android:background="@drawable/background">
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout"
@@ -126,7 +125,6 @@
                     app:layout_constraintStart_toStartOf="parent" />
 
             </android.widget.RelativeLayout>
-
 
 
             <TextView
