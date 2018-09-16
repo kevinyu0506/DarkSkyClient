@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.chuntingyu.darkskyclient.activities.login.LoginActivity">
+    tools:context="com.chuntingyu.weather.activities.login.LoginActivity">
 
     <ImageView
         android:layout_width="match_parent"
