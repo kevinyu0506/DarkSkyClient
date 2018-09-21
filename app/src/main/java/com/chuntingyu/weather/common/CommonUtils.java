@@ -1,4 +1,4 @@
-package com.chuntingyu.weather.tools;
+package com.chuntingyu.weather.common;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
  */
 
 public class CommonUtils {
-
     public static boolean isEmailValid(String email) {
         Pattern pattern;
         Matcher matcher;
@@ -18,10 +17,6 @@ public class CommonUtils {
         pattern = Pattern.compile(EMAIL_PATTERN);
         matcher = pattern.matcher(email);
         return matcher.matches();
-    }
-
-    public static int tempConverter(Double temp) {
-        return (int) Math.round((temp - 32) * (5.0 / 9.0));
     }
 
 }

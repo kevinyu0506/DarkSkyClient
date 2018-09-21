@@ -9,7 +9,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,18 +26,14 @@ import com.chuntingyu.weather.applications.BaseActivity;
 import com.chuntingyu.weather.applications.SplashActivity;
 import com.chuntingyu.weather.applications.WeatherApp;
 import com.chuntingyu.weather.R;
-import com.chuntingyu.weather.models.Daily;
 import com.chuntingyu.weather.models.Data;
 import com.chuntingyu.weather.models.Hourly;
 import com.chuntingyu.weather.models.Weather;
 import com.chuntingyu.weather.network.WeatherNao;
-//import com.chuntingyu.darkskyclient.services.WeatherServiceProvider;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,10 +44,10 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
 import com.chuntingyu.weather.models.Currently;
-import com.chuntingyu.weather.tools.CommonUtils;
 import com.chuntingyu.weather.tools.IconHelper;
 import com.chuntingyu.weather.tools.KYMath;
 import com.chuntingyu.weather.tools.KYTime;
+import com.chuntingyu.weather.tools.KYTouchListener;
 import com.chuntingyu.weather.tools.acplibrary.ACProgressConstant;
 import com.chuntingyu.weather.tools.acplibrary.ACProgressFlower;
 import com.chuntingyu.weather.tools.coredata.DataManager;
@@ -109,6 +105,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mainPresenter.onAttach(this);
 
         textViewShow.setText("Welcome " + mainPresenter.getEmailId() + "!");
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(hourlySummary, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,15 +123,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         recyclerView.setAdapter(dailyReportAdapter);
+        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
     }
 
     private View.OnClickListener updateButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             updateBtn.startAnimation(updateAnim);
-            MainActivityPermissionsDispatcher.showUserLocationWithPermissionCheck(MainActivity.this);
+//            MainActivityPermissionsDispatcher.showUserLocationWithPermissionCheck(MainActivity.this);
             MainActivityPermissionsDispatcher.getWeatherWithPermissionCheck(MainActivity.this);
         }
     };
@@ -164,7 +161,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         Currently currently = weather.getCurrently();
                         Log.e(TAG, "Temperature = " + currently.getTemperature());
 
-                        tempTextView.setText(String.valueOf(CommonUtils.tempConverter(currently.getTemperature())) + "\u00b0C");
+                        tempTextView.setText(String.valueOf(KYMath.tempConverterF2C(currently.getTemperature())) + "\u00b0C");
                         summaryTextView.setText(currently.getSummary());
 
                         Hourly hourly = weather.getHourly();
@@ -175,6 +172,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
                         Integer iconResource = IconHelper.getIconResource(currently.getIcon());
                         iconImageView.setImageResource(iconResource);
+                        Log.e(TAG, "Lat = " + lat + "Lon = " + lon);
                     } else {
                         Log.e(TAG, "No response, check your key");
                     }
@@ -194,7 +192,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 pd.dismiss();
                 updateBtn.clearAnimation();
 //                Toast.makeText("Unable to connect weather server", Toast.LENGTH_SHORT).show();
-//                EventBus.getDefault().post(new ErrorEvent("Unable to connect weather server"));
             }
         });
     }
@@ -207,21 +204,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
                         if (location != null) {
-                            // Logic to handle location object
                             lat = location.getLatitude();
                             lon = location.getLongitude();
-                            Geocoder gc = new Geocoder(getApplicationContext(), Locale.ENGLISH);
+                            Geocoder gc = new Geocoder(MainActivity.this);
                             try {
-                                Log.e(TAG, "Lat = " + location.getLatitude() + ", Lon = " + location.getLongitude());
+//                                Log.e(TAG, "Lat = " + location.getLatitude() + ", Lon = " + location.getLongitude());
                                 List<Address> lstAddress = gc.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                                 String returnAddress = lstAddress.get(0).getAdminArea().toUpperCase();
                                 userLocation.setText(returnAddress);
-
-//                                if (mSwipeRefreshLayout.isRefreshing()) {
-//                                    mSwipeRefreshLayout.setRefreshing(false);
-//                                }
                             } catch (IOException e) {
 
                             }
@@ -249,12 +240,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             Data dailyData = dailyDatas.get(position);
             holder.setIcon(dailyData.getIcon());
             holder.setSummary(dailyData.getSummary());
-            int tempHigh = CommonUtils.tempConverter(dailyData.getTemperatureHigh());
+            int tempHigh = KYMath.tempConverterF2C(dailyData.getTemperatureHigh());
             holder.setTempHigh(String.valueOf(tempHigh));
-            int tempLow = CommonUtils.tempConverter(dailyData.getTemperatureLow());
+            int tempLow = KYMath.tempConverterF2C(dailyData.getTemperatureLow());
             holder.setTempLow(String.valueOf(tempLow));
             String day = KYTime.getDayOfWeek(dailyData.getTime());
             holder.setWeekday(day);
+            String date = KYTime.getDate(dailyData.getTime());
+            holder.setDate(date);
+            Log.e("=====", day + " :" + dailyData.getTime());
         }
 
         @Override
@@ -266,12 +260,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public class DailyReportViewHolder extends RecyclerView.ViewHolder {
         View root;
         ImageView icon;
-        TextView summary;
-        TextView tempHigh;
-        TextView tempLow;
-        TextView weekday;
+        TextView summary, tempHigh, tempLow, weekday, date;
+        KYTouchListener touchListener = new KYTouchListener();
 
-        public DailyReportViewHolder(View view) {
+        DailyReportViewHolder(View view) {
             super(view);
             root = view.findViewById(R.id.cell_daily_report_root);
             icon = view.findViewById(R.id.cell_daily_report_icon);
@@ -279,9 +271,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             tempHigh = view.findViewById(R.id.cell_daily_report_temp_high);
             tempLow = view.findViewById(R.id.cell_daily_report_temp_low);
             weekday = view.findViewById(R.id.cell_daily_report_weekday);
+            date = view.findViewById(R.id.cell_daily_report_date);
 
-            root.getLayoutParams().height = KYMath.screenSize().y * 280/667;
-            root.getLayoutParams().width = KYMath.screenSize().x * 120/375;
+            root.getLayoutParams().height = KYMath.screenSize().y * 280 / 667;
+            root.getLayoutParams().width = KYMath.screenSize().x * 120 / 375;
+
+            root.setOnTouchListener(touchListener);
+//            icon.setOnTouchListener(touchListener);
         }
 
         public void setIcon(String resource) {
@@ -294,15 +290,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
 
         public void setTempHigh(String temp) {
-            this.tempHigh.setText(temp+"\u00b0C");
+            this.tempHigh.setText(temp + "\u00b0C");
         }
 
         public void setTempLow(String temp) {
-            this.tempLow.setText(temp+"\u00b0C");
+            this.tempLow.setText(temp + "\u00b0C");
         }
 
         public void setWeekday(String weekday) {
             this.weekday.setText(weekday);
+        }
+
+        public void setDate(String date) {
+            this.date.setText(date);
         }
     }
 

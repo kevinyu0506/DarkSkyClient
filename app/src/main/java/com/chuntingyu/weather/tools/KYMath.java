@@ -28,6 +28,10 @@ public class KYMath {
         return screenSize;
     }
 
+    public static int tempConverterF2C(Double temp) {
+        return (int) Math.round((temp - 32) * (5.0 / 9.0));
+    }
+
     public static double mod(double x, int y) {
         return ((x % y) + y) % y;
     }

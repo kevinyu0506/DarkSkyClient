@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.chuntingyu.weather.activities.main.MainActivity;
 import com.chuntingyu.weather.applications.BaseActivity;
-import com.chuntingyu.weather.tools.CommonUtils;
+import com.chuntingyu.weather.common.CommonUtils;
 import com.chuntingyu.weather.applications.WeatherApp;
 import com.chuntingyu.weather.R;
 import com.chuntingyu.weather.tools.coredata.DataManager;

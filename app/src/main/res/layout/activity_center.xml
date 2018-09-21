@@ -74,7 +74,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="200">
+                android:layout_weight="250">
 
                 <TextView
                     android:id="@+id/hourlySummary"
@@ -83,7 +83,7 @@
                     android:gravity="center_vertical"
                     android:text="Light rain stopping in 13 min, starting again 30 min later."
                     android:textAlignment="center"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
@@ -117,7 +117,7 @@
                     android:id="@+id/iconImageView"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="70"
+                    android:layout_weight="50"
                     android:adjustViewBounds="true"
                     android:cropToPadding="true"
                     android:padding="2dp"
@@ -128,8 +128,9 @@
                     android:id="@+id/summaryTextView"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="20"
+                    android:layout_weight="40"
                     android:text="Clear day"
+                    android:textSize="12sp"
                     android:textAlignment="center" />
 
             </LinearLayout>
