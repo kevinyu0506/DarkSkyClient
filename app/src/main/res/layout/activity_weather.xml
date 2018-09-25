@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mSwipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:weightSum="667">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="35"
+            android:weightSum="375">
+
+            <TextView
+                android:id="@+id/textViewShow"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="340"
+                android:text="welocme..."
+                android:textColor="@color/primary_text" />
+
+            <ImageView
+                android:id="@+id/update_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="35"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:src="@drawable/sync_btn"
+                android:tint="@color/primary_text" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="15" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="60"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="375">
+
+            <TextView
+                android:id="@+id/userLocation"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="300"
+                android:gravity="center_vertical"
+                android:text="TAIPEI"
+                android:textAlignment="center"
+                android:textColor="@color/primary_text"
+                android:textSize="40sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="45"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="375">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="250">
+
+                <TextView
+                    android:id="@+id/hourlySummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Light rain stopping in 13 min, starting again 30 min later."
+                    android:textAlignment="center"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="90"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="375">
+
+            <TextView
+                android:id="@+id/tempTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="150"
+                android:gravity="center"
+                android:textColor="@color/primary_text"
+                android:textSize="60sp"
+                tools:text="30\u00b0C" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="90"
+                android:orientation="vertical"
+                android:weightSum="90">
+
+                <ImageView
+                    android:id="@+id/iconImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="50"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:src="@drawable/sun" />
+
+                <TextView
+                    android:id="@+id/summaryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="40"
+                    android:text="Clear day"
+                    android:gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="360"
+            android:clipChildren="false"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="360">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/center_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="280"
+                android:clipChildren="false" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="375">
+
+            <LinearLayout
+                android:id="@+id/buttonLogout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="100"
+                android:background="@drawable/rounded_corner"
+                android:backgroundTint="#333333">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Log out"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="22" />
+
+    </LinearLayout>
+
+</LinearLayout>

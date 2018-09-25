@@ -58,7 +58,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 @RuntimePermissions
 public class MainActivity extends BaseActivity implements MainMvpView {
     private static final String TAG = "MainActivity";
-    //    private static final int MY_PERMISSIONS_FINE_LOCATION = 0;
     private FusedLocationProviderClient fusedLocationClient;
     private double lat;
     private double lon;
@@ -96,7 +95,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_center);
+        setContentView(R.layout.activity_weather);
 
         ButterKnife.bind(this);
 
