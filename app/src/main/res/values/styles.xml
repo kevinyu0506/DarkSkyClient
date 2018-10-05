@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="EditText" parent="TextAppearance.AppCompat">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/primary_text</item>
+    </style>
 </resources>

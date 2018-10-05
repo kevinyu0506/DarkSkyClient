@@ -3,7 +3,9 @@ package com.chuntingyu.weather.activities.login;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -13,26 +15,14 @@ import com.chuntingyu.weather.common.CommonUtils;
 import com.chuntingyu.weather.applications.WeatherApp;
 import com.chuntingyu.weather.R;
 import com.chuntingyu.weather.tools.coredata.DataManager;
-import com.gc.materialdesign.views.ButtonRectangle;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
     private static final String TAG = "LoginActivity";
+    private LoginPresenterBase loginPresenter;
+    private EditText emailTxt, passwordTxt;
+    private Button loginBtn;
 
-    LoginPresenterBase loginPresenter;
-
-    @BindView(R.id.login_email_txt)
-    EditText editTextEmail;
-
-    @BindView(R.id.login_password_txt)
-    EditText editTextPassword;
-
-    @BindView(R.id.login_next_btn)
-    ButtonRectangle buttonLogin;
-
-
+    TextInputLayout emailWrapper, passwordWrapper;
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -42,25 +32,29 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login);
 
         DataManager dataManager = ((WeatherApp) getApplication()).getDataManager();
         loginPresenter = new LoginPresenterBase(dataManager);
 
         loginPresenter.onAttach(this);
 
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
+        emailTxt = findViewById(R.id.login_email_txt);
+        passwordTxt = findViewById(R.id.login_password_txt);
+        loginBtn = findViewById(R.id.login_next_btn);
+        emailWrapper = findViewById(R.id.login_email_wrapper);
+        passwordWrapper = findViewById(R.id.login_password_wrapper);
+        emailWrapper.setHint("Email");
+        passwordWrapper.setHint("Password");
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onLoginButtonClick();
             }
         });
-
-        setContentView(R.layout.activity_start);
-        final TextInputLayout usernameWrapper = (TextInputLayout) findViewById(R.id.usernameWrapper);
-        final TextInputLayout passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
 
     }
 
@@ -73,10 +67,11 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @Override
     public void onLoginButtonClick() {
-        String emailId = editTextEmail.getText().toString();
-        String password = editTextPassword.getText().toString();
 
-        if (!CommonUtils.isEmailValid(emailId)) {
+        String email = emailWrapper.getEditText().getText().toString();
+        String password = passwordWrapper.getEditText().getText().toString();
+
+        if (!CommonUtils.isEmailValid(email)) {
             Toast.makeText(this, "Enter correct Email", Toast.LENGTH_LONG).show();
             return;
         }
@@ -86,6 +81,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             return;
         }
 
-        loginPresenter.startLogin(emailId);
+        loginPresenter.startLogin(email);
     }
 }
