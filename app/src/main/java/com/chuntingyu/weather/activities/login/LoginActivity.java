@@ -23,14 +23,16 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     LoginPresenterBase loginPresenter;
 
-    @BindView(R.id.editTextEmail)
+    @BindView(R.id.login_email_txt)
     EditText editTextEmail;
 
-    @BindView(R.id.editTextPassword)
+    @BindView(R.id.login_password_txt)
     EditText editTextPassword;
 
-    @BindView(R.id.buttonLogin)
+    @BindView(R.id.login_next_btn)
     ButtonRectangle buttonLogin;
+
+
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -40,7 +42,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+//        setContentView(R.layout.activity_login);
 
         DataManager dataManager = ((WeatherApp) getApplication()).getDataManager();
         loginPresenter = new LoginPresenterBase(dataManager);
@@ -55,6 +57,11 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 onLoginButtonClick();
             }
         });
+
+        setContentView(R.layout.activity_start);
+        final TextInputLayout usernameWrapper = (TextInputLayout) findViewById(R.id.usernameWrapper);
+        final TextInputLayout passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
+
     }
 
     @Override
