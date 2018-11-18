@@ -21,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chuntingyu.weather.applications.BaseActivity;
 import com.chuntingyu.weather.applications.SplashActivity;
@@ -114,7 +115,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         });
 
         MainActivityPermissionsDispatcher.showUserLocationWithPermissionCheck(this);
-        MainActivityPermissionsDispatcher.getWeatherWithPermissionCheck(this);
+//        MainActivityPermissionsDispatcher.getWeatherWithPermissionCheck(this);
 
         updateBtn.setOnClickListener(updateButtonClickListener);
         updateAnim = AnimationUtils.loadAnimation(this, R.anim.update_rotate_anim);
@@ -206,17 +207,22 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         if (location != null) {
                             lat = location.getLatitude();
                             lon = location.getLongitude();
+                            Log.e(TAG, "Lat = " + location.getLatitude() + ", Lon = " + location.getLongitude());
                             Geocoder gc = new Geocoder(MainActivity.this);
-                            try {
-//                                Log.e(TAG, "Lat = " + location.getLatitude() + ", Lon = " + location.getLongitude());
-                                List<Address> lstAddress = gc.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                String returnAddress = lstAddress.get(0).getAdminArea().toUpperCase();
-                                userLocation.setText(returnAddress);
-                            } catch (IOException e) {
-
+                            if (Geocoder.isPresent()) {
+                                try {
+                                    List<Address> lstAddress = gc.getFromLocation(23.0182554, 122.5333168, 1);
+                                    String returnAddress = lstAddress.get(0).getAdminArea().toUpperCase();
+                                    userLocation.setText(returnAddress);
+                                } catch (IndexOutOfBoundsException e) {
+                                    Toast.makeText(MainActivity.this, "Index out of bonds exception", Toast.LENGTH_SHORT).show();
+                                } catch (IOException io) {
+                                    Toast.makeText(MainActivity.this, "IO exception", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     }
+
                 });
     }
 

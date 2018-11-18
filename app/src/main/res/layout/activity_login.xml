@@ -22,7 +22,7 @@
             android:textSize="30sp" />
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/login_email_wrapper"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:theme="@style/EditText">
 
             <EditText
@@ -69,10 +69,12 @@
             android:id="@+id/login_next_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/login_password_wrapper"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/colorPrimaryDark"
             android:text="Login" />
 
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

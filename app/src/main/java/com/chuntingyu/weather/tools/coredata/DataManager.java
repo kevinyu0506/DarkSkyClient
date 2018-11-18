@@ -7,9 +7,11 @@ package com.chuntingyu.weather.tools.coredata;
 public class DataManager {
 
     private SharedPreferencesHelper sharedPreferencesHelper;
+    private LocationHelper locationHelper;
 
-    public DataManager(SharedPreferencesHelper sharedPreferencesHelper) {
+    public DataManager(SharedPreferencesHelper sharedPreferencesHelper, LocationHelper locationHelper) {
         this.sharedPreferencesHelper = sharedPreferencesHelper;
+        this.locationHelper = locationHelper;
     }
 
     public void clear() {

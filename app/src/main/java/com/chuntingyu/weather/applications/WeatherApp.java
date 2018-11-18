@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.chuntingyu.weather.tools.coredata.DataManager;
+import com.chuntingyu.weather.tools.coredata.LocationHelper;
 import com.chuntingyu.weather.tools.coredata.SharedPreferencesHelper;
 
 /**
@@ -20,7 +21,8 @@ public class WeatherApp extends Application {
         super.onCreate();
         WeatherApp.context = getApplicationContext();
         SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(getApplicationContext());
-        dataManager = new DataManager(sharedPreferencesHelper);
+        LocationHelper locationHelper = new LocationHelper(getContext());
+        dataManager = new DataManager(sharedPreferencesHelper, locationHelper);
     }
 
     public DataManager getDataManager() {
